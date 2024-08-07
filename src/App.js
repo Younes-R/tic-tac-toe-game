@@ -22,7 +22,7 @@ function Board() {
   const [winner, setWinner] = useState(null);
   function handleSquareClick(i) {
     let squares = squaresContent;
-    if (squares[i] == null) {
+    if (squares[i] == null && !winner) {
       if (xIsNext) {
         squares[i] = 'X';
         setXIsNext(false);
@@ -55,12 +55,15 @@ function Board() {
     let [a, b, c] = patterns[0];
     for (let i = 0; i < 8; i++) {
       [a, b, c] = patterns[i];
-      if( squaresContent[a] == squaresContent[b] && squaresContent[a] == squaresContent[c]) {
+      if(squaresContent[a] != null && squaresContent[a] == squaresContent[b] && squaresContent[a] == squaresContent[c]) {
         return squaresContent[a];
-      } 
-      
+      }   
     } 
-    return 'No Winner'
+  }
+
+  function refresh() {
+    setSquaresContent(Array(9).fill(null));
+    setWinner(null);
   }
 
   return (
@@ -76,9 +79,14 @@ function Board() {
       <Square content={squaresContent[7]} onSquareClick={() => {handleSquareClick(7)}} />
       <Square content={squaresContent[8]} onSquareClick={() => {handleSquareClick(8)}} />
     </div>
-    <div>
-    <p>The Winner is: {winner}</p>
-    </div>  
+    <div className={`result ${winner ? '' : 'display'}`}>
+      <p>The Winner is: {winner}</p>
+    </div> 
+    <button className={`refresh ${winner ? '' : 'display'}`} onClick={() => {refresh()}}>Play again !</button>
+    <div className={`result ${(!squaresContent.includes(null) && !winner) ? '' : 'display'}`}>
+      <p>No Winner </p>
+    </div>
+    <button className={`refresh ${(!squaresContent.includes(null) && !winner) ? '' : 'display'}`} onClick={() => {refresh()}}>Play again !</button>
     </>
   )
 }
